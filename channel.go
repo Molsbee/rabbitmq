@@ -4,9 +4,8 @@ import (
 	"github.com/streadway/amqp"
 )
 
-// AmqpChannel - Interface definition of streadway amqp channel
-// this is used to allow for swapping out implementations during
-// testing
+// AmqpChannel - Interface definition of streadway amqp channel this is used to allow for swapping out
+// implementations during testing
 type AmqpChannel interface {
 	Ack(tag uint64, multiple bool) error
 	Cancel(consumer string, noWait bool) error

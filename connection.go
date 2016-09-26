@@ -6,9 +6,8 @@ import (
 	"github.com/streadway/amqp"
 )
 
-// AmqpConnection - Interface definition of streadway amqp connection
-// this is used to allow for swapping out implementations during
-// testing
+// AmqpConnection - Interface definition of streadway amqp connection  this is used to allow for swapping out
+// implementations during testing
 type AmqpConnection interface {
 	Channel() (*amqp.Channel, error)
 	Close() error
