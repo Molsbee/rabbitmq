@@ -44,6 +44,7 @@ func (r *RabbitQueue) Publish(msg struct{}) error {
 // ListenerFunc is a generic mechanism for re-establishing RabbitMQ delivery channel in the event it's shutdown
 // and calling a provided function with a delivery item to be acted upon.  When Shutdown is called on RabbitMQ it will
 // also cleanly close the loop managing the listener, providing a clean method for Shutting down all goroutines
+// TODO: Refactor this to call the configured version
 func (r *RabbitQueue) ListenerFunc(fn func(d amqp.Delivery)) {
 	go func() {
 		log.Println("Setting up listener to process messages and delegate to function")
