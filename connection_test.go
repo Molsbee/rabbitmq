@@ -1,8 +1,8 @@
 package rabbitmq
 
 import (
-	"github.com/stretchr/testify/mock"
 	"github.com/streadway/amqp"
+	"github.com/stretchr/testify/mock"
 )
 
 type TestConnection struct {

@@ -79,8 +79,7 @@ func TestListen(t *testing.T) {
 	channel.On("Consume", amqpQueue.Name, consumerTag, false, false, false, false, mock.Anything).Return(deliveryChannel, nil)
 	channel.On("Cancel", consumerTag, true).Return(nil)
 
-
-	rabbitmq := createTestRabbitMQ(connection, channel);
+	rabbitmq := createTestRabbitMQ(connection, channel)
 	defer rabbitmq.Disconnect()
 
 	rabbitQueue, err := rabbitmq.NewRabbitQueue(amqpQueue.Name, exchangeName, routingKey, nil)
