@@ -15,17 +15,17 @@ var (
 func main() {
 	flag.Parse()
 
-	rabbitMQ, err := rabbitmq.Connect(*rabbit, *consumerTag)
+	rabbitMQ, err := rabbitmq.Connect(*rabbit)
 	if err != nil {
-		log.Println("Failled to esablish a connection or channel with RabbitMQ", err)
+		log.Fatalf("Failled to esablish a connection or channel with RabbitMQ - error %+v", err)
 	}
 
 	queue, err := rabbitMQ.NewRabbitQueue("test", "test.exchange", "test", nil)
 	if err != nil {
-		log.Println("Failed to declare queue, exchange and bind them", err)
+		log.Fatal("Failed to declare queue, exchange and bind them - error %+v", err)
 	}
 
-	queue.ListenerFunc(func(d amqp.Delivery) {
+	queue.ListenerFunc(*consumerTag, func(d amqp.Delivery) {
 		log.Println(d.Body)
 		d.Ack(false)
 	})
