@@ -8,12 +8,9 @@ import (
 )
 
 type Rabbit struct {
-	endpoint string
-
+	endpoint   string
 	connection AmqpConnection
-
-	shutdown chan bool
-	//queues 	[]RabbitQueue
+	shutdown   chan bool
 }
 
 // Connect creates a new connection and returns a struct which wraps the underlying amqp connection.
