@@ -2,14 +2,52 @@ package config
 
 import "github.com/streadway/amqp"
 
-type Exchange struct {
-	Name       string
-	Type       string
-	Durable    bool
-	AutoDelete bool
-	Internal   bool
-	NoWait     bool
-	Args       amqp.Table
+type Exchange interface {
+	Name() string
+	Type() string
+	Durable() bool
+	AutoDelete() bool
+	Internal() bool
+	NoWait() bool
+	Args() amqp.Table
+}
+
+type exchange struct {
+	name         string
+	exchangeType string
+	durable      bool
+	autoDelete   bool
+	internal     bool
+	noWait       bool
+	args         amqp.Table
+}
+
+func (e *exchange) Name() string {
+	return e.name
+}
+
+func (e *exchange) Type() string {
+	return e.exchangeType
+}
+
+func (e *exchange) Durable() bool {
+	return e.durable
+}
+
+func (e *exchange) AutoDelete() bool {
+	return e.autoDelete
+}
+
+func (e *exchange) Internal() bool {
+	return e.internal
+}
+
+func (e *exchange) NoWait() bool {
+	return e.noWait
+}
+
+func (e *exchange) Args() amqp.Table {
+	return e.args
 }
 
 type ExchangeBuilder interface {
@@ -19,7 +57,7 @@ type ExchangeBuilder interface {
 	Internal(bool) ExchangeBuilder
 	NoWait(bool) ExchangeBuilder
 	Args(amqp.Table) ExchangeBuilder
-	Build() *Exchange
+	Build() Exchange
 }
 
 type exchangeBuilder struct {
@@ -36,7 +74,7 @@ type exchangeBuilder struct {
 // Each method call will override the default settings and Build will return a new initialized Exchange.
 // Defaults
 // [Type: direct, Durable: true, AutoDelete: false, Internal: false, NoWait: false, Args: nil]
-func ExchangeBuilder(name string) ExchangeBuilder {
+func Builder(name string) ExchangeBuilder {
 	return &exchangeBuilder{
 		name:         name,
 		exchangeType: "direct",
@@ -85,14 +123,14 @@ func (e *exchangeBuilder) Args(args amqp.Table) ExchangeBuilder {
 }
 
 // Build constructs the data from the ExchangeBuilder into a new Exchange that can be used to configure environment
-func (e *exchangeBuilder) Build() *Exchange {
-	return &Exchange{
-		Name:       e.name,
-		Type:       e.exchangeType,
-		Durable:    e.durable,
-		AutoDelete: e.autoDelete,
-		Internal:   e.internal,
-		NoWait:     e.noWait,
-		Args:       e.args,
+func (e *exchangeBuilder) Build() Exchange {
+	return &exchange{
+		name:         e.name,
+		exchangeType: e.exchangeType,
+		durable:      e.durable,
+		autoDelete:   e.autoDelete,
+		internal:     e.internal,
+		noWait:       e.noWait,
+		args:         e.args,
 	}
 }
