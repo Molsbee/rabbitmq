@@ -1,6 +1,13 @@
-package config
+package exchange
 
 import "github.com/streadway/amqp"
+
+const (
+	DIRECT_EXCHANGE  = "direct"
+	FANOUT_EXCHANGE  = "fanout"
+	TOPIC_EXCHANGE   = "topic"
+	HEADERS_EXCHANGE = "headers"
+)
 
 type Exchange interface {
 	Name() string
