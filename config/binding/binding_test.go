@@ -1,10 +1,10 @@
 package binding
 
 import (
-	"testing"
-	"github.com/molsbee/rabbitmq/config/queue"
 	"github.com/molsbee/rabbitmq/config/exchange"
+	"github.com/molsbee/rabbitmq/config/queue"
 	"github.com/stretchr/testify/assert"
+	"testing"
 )
 
 func TestBindingBuilder(t *testing.T) {

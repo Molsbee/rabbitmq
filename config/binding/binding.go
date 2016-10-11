@@ -6,7 +6,15 @@ import (
 	"github.com/streadway/amqp"
 )
 
-type Binding struct {
+type Binding interface {
+	QueueName() string
+	Key() string
+	ExchangeName() string
+	NoWait() bool
+	Args() amqp.Table
+}
+
+type binding struct {
 	queue    string
 	key      string
 	exchange string
@@ -14,24 +22,32 @@ type Binding struct {
 	args     amqp.Table
 }
 
-func (b *Binding) QueueName() string {
+func (b *binding) QueueName() string {
 	return b.queue
 }
 
-func (b *Binding) Key() string {
+func (b *binding) Key() string {
 	return b.key
 }
 
-func (b *Binding) ExchangeName() string {
+func (b *binding) ExchangeName() string {
 	return b.exchange
 }
 
-func (b *Binding) NoWait() bool {
+func (b *binding) NoWait() bool {
 	return b.noWait
 }
 
-func (b *Binding) Args() amqp.Table {
+func (b *binding) Args() amqp.Table {
 	return b.args
+}
+
+type bindingBuilder struct {
+	queue    queue.Queue
+	exchange exchange.Exchange
+	key      string
+	args     amqp.Table
+	noWait   bool
 }
 
 type QueueBinding interface {
@@ -45,15 +61,7 @@ type ExchangeBinding interface {
 type ParameterBinding interface {
 	Args(args amqp.Table) ParameterBinding
 	NoWait(noWait bool) ParameterBinding
-	Build() *Binding
-}
-
-type bindingBuilder struct {
-	queue    queue.Queue
-	exchange exchange.Exchange
-	key      string
-	args     amqp.Table
-	noWait   bool
+	Build() Binding
 }
 
 func Bind(queue queue.Queue) QueueBinding {
@@ -84,8 +92,8 @@ func (b *bindingBuilder) NoWait(noWait bool) ParameterBinding {
 	return b
 }
 
-func (b *bindingBuilder) Build() *Binding {
-	return &Binding{
+func (b *bindingBuilder) Build() Binding {
+	return &binding{
 		queue:    b.queue.Name(),
 		key:      b.key,
 		exchange: b.exchange.Name(),
