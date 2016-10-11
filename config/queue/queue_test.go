@@ -1,8 +1,8 @@
 package queue
 
 import (
-	"testing"
 	"github.com/stretchr/testify/assert"
+	"testing"
 )
 
 func TestQueueBuilder(t *testing.T) {
